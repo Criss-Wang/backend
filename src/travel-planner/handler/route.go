@@ -7,7 +7,6 @@ import (
 	"strconv"
 	"travel-planner/model"
 	"travel-planner/service"
-
 	"github.com/gorilla/mux"
 )
 

@@ -20,11 +20,11 @@ func GetVacationsHandler(w http.ResponseWriter, r *http.Request) {
 
 	user := r.Context().Value("user")
 	claims := user.(*jwt.Token).Claims
-	userStringId := claims.(jwt.MapClaims)["user_id_string"].(string)
+	userStringId := claims.(jwt.MapClaims)["id"].(string)
 
 	siteIdInt, _ := strconv.ParseInt(userStringId, 0, 64)
 	userId := uint32(siteIdInt)
-	
+
 	vacations, err := service.GetVacationsInfo(userId)
 	if err != nil {
 		http.Error(w, "Fail to read vacation info from backend", http.StatusInternalServerError)
@@ -72,9 +72,13 @@ func GetVacationPlanHandler(w http.ResponseWriter, r *http.Request) {
 	vacationID := mux.Vars(r)["vacation_id"]
 	fmt.Println("vacationID:", vacationID)
 	w.Header().Set("Content_Type", "application/json")
-	// get plans
+
 	intId, _ := strconv.ParseInt(vacationID, 0, 64)
 	parsedVacationId := uint32(intId)
+	// make plans
+	//GetPlanHandler(w, r)
+
+	// get plans
 	plans, err := service.GetPlanInfoFromVactionId(parsedVacationId)
 
 	if err != nil {
@@ -122,8 +126,8 @@ func GetVacationPlanHandler(w http.ResponseWriter, r *http.Request) {
 				ActivityEndDatetime:   activity.EndTime,
 				ActivityDate:          activity.Date,
 				ActivityDuration:      activity.DurationHrs,
-				ActivityLongitude: 	   site.Longitude,
-				ActivityLatitude: 	   site.Latitude,
+				ActivityLongitude:     site.Longitude,
+				ActivityLatitude:      site.Latitude,
 			}
 
 			totalActList = append(totalActList, activityList)
